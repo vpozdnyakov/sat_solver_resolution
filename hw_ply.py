@@ -1,5 +1,3 @@
-import ply.lex as lex
-
 tokens = (
     'VAR', 
     'CONJUCTION', 'DISJUNCTION', 'IMPLICATION', 'NEGATION',
@@ -23,14 +21,47 @@ def t_error(t):
     t.lexer.skip(1)
 
 # Build the lexer
+import ply.lex as lex
 lexer = lex.lex()
 
-# Test it out
-data = r'(p -> q) /\(~r \/ s) /\ (~q -> p)'
+def p_expression_conjuction(p):
+    'expression : expression CONJUCTION expression'
+    p[0] = p[1] + '/\\' + p[3]
 
-# Give the lexer some input
-lexer.input(data)
+def p_expression_paren(p):
+    'expression : LPAREN clause RPAREN'
+    p[0] = p[2]
 
-# Tokenize
-for tok in lexer:
-    print(tok)
+def p_clause_implication(p):
+    'clause : unit IMPLICATION unit'
+    p[0] = '(' + p[1] + '->' + p[3] + ')'
+
+def p_clause_disjunction(p):
+    'clause : unit DISJUNCTION unit'
+    p[0] = '(' + p[1] + r'\/' + p[3] + ')'
+
+def p_unit_negation(t):
+    'unit : NEGATION unit'
+    t[0] = '~' + t[2]
+
+def p_unit_var(t):
+    'unit : VAR'
+    t[0] = t[1]
+
+def p_error(t):
+    print("Syntax error at '%s'" % t.value)
+
+# Build the parser
+import ply.yacc as yacc
+parser = yacc.yacc()
+
+# sample = r'(p -> q) /\(~r \/ s) /\ (~q -> p)'
+while True:
+    try:
+        s = input('input > ')
+    except EOFError:
+        break
+    if not s: continue
+    result = parser.parse(s)
+    print(result)
+    
