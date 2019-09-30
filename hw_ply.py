@@ -1,12 +1,12 @@
 tokens = (
     'VAR', 
-    'CONJUCTION', 'DISJUNCTION', 'IMPLICATION', 'NEGATION',
+    'CONJUNCTION', 'DISJUNCTION', 'IMPLICATION', 'NEGATION',
     'LPAREN','RPAREN',
 )
 
 # Tokens
 t_VAR = r'[a-z]'
-t_CONJUCTION = r'/\\'
+t_CONJUNCTION = r'/\\'
 t_DISJUNCTION = r'\\/'
 t_IMPLICATION = r'->'
 t_NEGATION = r'~'
@@ -109,8 +109,9 @@ class Expression:
             if len_clauses == len(self.clauses): 
                 return
 
-def p_expression_conjuction(p):
-    'expression : expression CONJUCTION expression'
+# Grammar
+def p_expression_conjunction(p):
+    'expression : expression CONJUNCTION expression'
     p[0] = Expression(p[1].clauses + p[3].clauses)
 
 def p_expression_paren(p):
