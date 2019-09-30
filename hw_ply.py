@@ -40,7 +40,7 @@ class Clause:
         if unit1.value == unit2.value:
             if unit1.negation != unit2.negation:
                 self.tautology = True
-            elif unit1.value == None:
+            elif unit1.value is None:
                 self.satisfiable = False
             else:
                 self.units[0] = Unit(None)
