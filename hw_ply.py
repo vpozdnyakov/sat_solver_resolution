@@ -95,7 +95,7 @@ class Expression:
                             i_value = clause_i.units[i].value
                             j_value = clause_j.units[j].value
                             i_neg = clause_i.units[i].negation
-                            j_neg = clause_i.units[j].negation
+                            j_neg = clause_j.units[j].negation
                             if (i_value == j_value and i_neg != j_neg):
                                 new_clause = Clause(clause_i.units[i^1], 
                                                     clause_j.units[j^1])
