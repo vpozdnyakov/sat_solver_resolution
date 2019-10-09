@@ -115,8 +115,12 @@ def p_expression_conjunction(p):
     p[0] = Expression(p[1].clauses + p[3].clauses)
 
 def p_expression_paren(p):
-    'expression : LPAREN clause RPAREN'
-    p[0] = Expression([p[2]])
+    'expression : LPAREN expression RPAREN'
+    p[0] = p[2]
+
+def p_expression_clause(p):
+    'expression : clause'
+    p[0] = Expression([p[1]])
 
 def p_clause_implication(p):
     'clause : unit IMPLICATION unit'
@@ -126,6 +130,10 @@ def p_clause_implication(p):
 def p_clause_disjunction(p):
     'clause : unit DISJUNCTION unit'
     p[0] = Clause(p[1], p[3])
+
+def p_clause_unit(p):
+    'clause : unit'
+    p[0] = Clause(p[1], Unit(None))
 
 def p_unit_negation(p):
     'unit : NEGATION unit'
@@ -145,6 +153,7 @@ parser = yacc.yacc()
 
 # example: (p -> q) /\ (~r \/ s) /\ (~q -> p)
 # example: (a\/~b)/\(b\/c)/\(~a\/c)/\(e\/~d)/\(d\/~c)/\(~e\/~c)
+# example: (p->q) /\ (q->r) /\ (r->s) /\ p /\ ~s
 
 while True:
     try:
@@ -157,3 +166,4 @@ while True:
         result.reduce_tautology()
         result.apply_resolution()
         result.print()
+        
